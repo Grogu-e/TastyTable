@@ -6,7 +6,88 @@ Tasks:
 Create user name Demo.
 
 Recipe for Demo user
+username: demo
+password: demo@1234
+
+
+SQL_recipe for Water :
+
+
+INSERT INTO recipe (author_id, title, body) VALUES (4,"Boil Water", "Boiling Water");
 
 Steps for Recipe 
-
+INSERT INTO steps (recipe_id_fk, step_num, description)
+VALUES (1, 1, "Fill a pot with water."),
+       (1, 2, "Place the pot on the stove and turn the heat to high."),
+       (1, 3, "Bring the water to a boil."),
+       (1, 4, "Once the water has reached a boil, turn off the heat and let it cool for a few minutes.");
 Ingrents for Recipe
+CREATE TABLE ingredients 
+(
+id_ pk INTEGER NOT NULL,
+type   TEXT NOT NULL
+)
+INSERT INTO ingredients (type) VALUES ("Water");
+
+
+Recreate the ingredients table on sql.
+
+
+
+
+Bugs:
+
+Bug after login, redirection problem. Login should redirect to home. 
+
+
+
+
+Help-To Undertand Sql more and values:
+#Chat_GbT helped
+
+CREATE TABLE ingredients (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL
+);
+
+INSERT INTO ingredients (name)
+VALUES ("boneless, skinless chicken breasts"),
+       ("mayonnaise"),
+       ("sour cream"),
+       ("celery"),
+       ("red onion"),
+       ("lemon juice"),
+       ("salt"),
+       ("pepper"),
+       ("parsley"),
+       ("cilantro");
+
+CREATE TABLE recipes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  instructions TEXT NOT NULL
+);
+
+INSERT INTO recipes (name, instructions)
+VALUES ("Chicken Salad", "Cook the chicken breasts in a pot of boiling water or on a grill until they reach an internal temperature of 165°F. Once the chicken is cooked, let it cool to room temperature. Dice the cooled chicken into small pieces. In a large bowl, mix together the chicken, mayonnaise, sour cream, celery, red onion, lemon juice, salt, and pepper. Taste the mixture and adjust the seasoning as needed. Serve the chicken salad on a bed of lettuce or in a sandwich, garnished with fresh parsley or cilantro if desired.");
+
+CREATE TABLE recipe_ingredients (
+  recipe_id INTEGER NOT NULL,
+  ingredient_id INTEGER NOT NULL,
+  quantity REAL NOT NULL,
+  unit TEXT NOT NULL,
+  FOREIGN KEY (recipe_id) REFERENCES recipes (id),
+  FOREIGN KEY (ingredient_id) REFERENCES ingredients (id)
+);
+
+INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit)
+VALUES (1, 1, 2, "breast"),
+       (1, 2, 0.5, "cup"),
+       (1, 3, 0.25, "cup"),
+       (1, 4, 0.25, "cup"),
+       (1, 5, 0.25, "cup"),
+       (1, 6, 2, "tablespoon"),
+       (1, 7, null, "to taste"),
+       (1, 8, null, "to taste"),
+       (1, 9, null, "garnish"),
+       (1, 10, null, "garnish");
