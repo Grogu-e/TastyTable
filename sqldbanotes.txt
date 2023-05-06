@@ -1,0 +1,84 @@
+Sql for project DBA
+
+
+CREATE TABLE user 
+( id NUMBER (3) NOT NULL,
+  username VARCHAR2 (30) NOT NULL,
+  password VARCHAR2 (30) NOT NULL,
+  salt VARCHAR2 (30) NOT NULL,
+  CONSTRAINT user_id_pk PRIMARY KEY (id),
+  CONSTRAINT user_username_uq UNIQUE (username)
+);
+
+CREATE TABLE user 
+(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  salt TEXT NOT NULL
+);
+
+CREATE TABLE recipe (
+  id NUMBER (3) NOT NULL,
+  author_id NUMBER (2) NOT NULL,
+  created DATE NOT NULL,
+  title VARCHAR2 (30) NOT NULL,
+  body VARCHAR2 (30) NOT NULL,
+  CONSTRAINT recipe_id_pk PRIMARY KEY (id),
+  CONSTRAINT recipe_author_id_fk FOREIGN KEY (author_id) REFERENCES user (id)
+);
+
+-- Inserting data into the user table
+INSERT INTO user (username, password, salt) VALUES ('user1', 'password1', 'salt1');
+INSERT INTO user (username, password, salt) VALUES ('user2', 'password2', 'salt2');
+INSERT INTO user (username, password, salt) VALUES ('user3', 'password3', 'salt3');
+
+-- Inserting data into the recipe table
+INSERT INTO recipe (recipe_id, date_created, title, body) VALUES (1, 'Chicken Salad', 'Ingredients: \n- 2 boneless chicken breasts \n- 1/4 cup mayonnaise \n- 1/4 cup sour cream \n- 1 tbsp Dijon mustard \n- 1 tsp lemon juice \n- Salt and pepper to taste \n- 1 cup chopped celery \n- 1/4 cup diced red onion \n- 1/4 cup chopped walnuts \n- 4 cups mixed greens \n\nInstructions: \n1. Cook the chicken breasts in a large pot of boiling water until cooked through, about 10-12 minutes. Remove from heat and let cool. \n2. In a small bowl, mix together the mayonnaise, sour cream, Dijon mustard, lemon juice, salt, and pepper. \n3. Dice the chicken into small pieces and add it to a large bowl. \n4. Add the celery, red onion, and walnuts to the bowl with the chicken. \n5. Pour the dressing over the chicken mixture and stir until evenly coated. \n6. Serve the chicken salad over a bed of mixed greens.');
+
+INSERT INTO recipe (recipe_id, title, body) VALUES (2, 'Vegetable Stir-Fry', 'Ingredients: \n- 1 tbsp vegetable oil \n- 1 red bell pepper, sliced \n- 1 yellow onion, sliced \n- 1 cup sliced mushrooms \n- 1 cup broccoli florets \n- 1 cup sliced carrots \n- 2 cloves garlic, minced \n- 2 tbsp soy sauce \n- 1 tbsp cornstarch \n- Salt and pepper to taste \n\nInstructions: \n1. Heat the oil in a large wok or frying pan over high heat. \n2. Add the red bell pepper, onion, mushrooms, broccoli, and carrots to the pan. Stir-fry for 3-5 minutes until the vegetables are slightly softened. \n3. Add the garlic to the pan and stir for 30 seconds. \n4. In a small bowl, mix together the soy sauce and cornstarch. \n5. Pour the soy sauce mixture over the vegetables and stir until the vegetables are coated and the sauce has thickened, about 2-3 minutes. \n6. Season with salt and pepper to taste. Serve hot over rice or noodles.');
+
+
+
+INSERT INTO recipe (recipe_id, title, body) VALUES (3, 'Tomato Soup', 'Ingredients: \n- 2 tbsp butter \n- 1 yellow onion, diced \n- 3 cloves garlic, minced \n- 4 large ripe tomatoes, chopped \n- 4 cups chicken or vegetable broth \n- 1 tsp dried basil \n- Salt and pepper to taste \n- 1 cup heavy cream \n\nInstructions: \n1. In a large pot, melt the butter over medium heat. \n2. Add the onion and garlic to the pot and cook until softened, about 5 minutes. \n3. Add the chopped tomatoes, broth, and basil to the pot. Bring to a boil, then reduce heat and let simmer for 10 minutes. \n4. Use an immersion blender to puree the soup until smooth. \n5. Stir in the heavy cream and season with salt and pepper to taste. \n6. Serve hot with crusty bread or croutons.');
+
+INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, measure_type) VALUES (2, 17, 1, 'tbsp');
+
+-- Inserting data into the ingredients table
+INSERT INTO ingredients (type) VALUES ('Boneless Chicken Breast');
+INSERT INTO ingredients (type) VALUES ('Mayonnaise');
+INSERT INTO ingredients (type) VALUES ('Sour Cream');
+INSERT INTO ingredients (type) VALUES ('Dijon Mustard');
+INSERT INTO ingredients (type) VALUES ('Lemon Juice');
+INSERT INTO ingredients (type) VALUES ('Celery');
+INSERT INTO ingredients (type) VALUES ('Red Onion');
+INSERT INTO ingredients (type) VALUES ('Walnuts');
+INSERT INTO ingredients (type) VALUES ('Vegetable Oil');
+INSERT INTO ingredients (type) VALUES ('Red Bell Pepper');
+INSERT INTO ingredients (type) VALUES ('Yellow Onion');
+INSERT INTO ingredients (type) VALUES ('Mushrooms');
+INSERT INTO ingredients (type) VALUES ('Broccoli');
+INSERT INTO ingredients (type) VALUES ('Carrots');
+INSERT INTO ingredients (type) VALUES ('Garlic');
+INSERT INTO ingredients (type) VALUES ('Soy Sauce');
+INSERT INTO ingredients (type) VALUES ('Cornstarch');
+
+-- Inserting data into the steps table
+INSERT INTO steps (recipe_id_fk, step_num, description) VALUES (1, 1, 'Cook the chicken breasts in a large pot of boiling water until cooked through, about 10-12 minutes. Remove from heat and let cool.');
+INSERT INTO steps (recipe_id_fk, step_num, description) VALUES (1, 2, 'In a small bowl, mix together the mayonnaise, sour cream, Dijon mustard, lemon juice, salt, and pepper.');
+INSERT INTO steps (recipe_id_fk, step_num, description) VALUES (1, 3, 'Dice the chicken into small pieces and add it to a large bowl.');
+INSERT INTO steps (recipe_id_fk, step_num, description) VALUES (1, 4, 'Add the celery, red onion, and walnuts to the bowl with the chicken.');
+INSERT INTO steps (recipe_id_fk, step_num, description) VALUES (1, 5, 'Pour the dressing over the chicken mixture and stir until evenly coated.');
+INSERT INTO steps (recipe_id_fk, step_num, description) VALUES (1, 6, 'Serve the chicken salad over a bed of mixed greens.');
+INSERT INTO steps (recipe_id_fk, step_num, description) VALUES (2, 1, 'Heat the oil in a large wok or frying pan over high heat.');
+INSERT INTO steps (recipe_id_fk, step_num, description) VALUES (2, 2, 'Add the red bell pepper, onion, mushrooms, broccoli, and carrots to the pan. Stir-fry for 3-5 minutes until the vegetables are slightly softened.');
+INSERT INTO steps (recipe_id_fk, step_num, description) VALUES (2, 3, 'Add the garlic to the pan and stir for 30 seconds
+
+
+
+---Create a user and 
+CREATE USER c##username
+
+IDENTIFIED BY password
+
+GRANT SEESION c##username
