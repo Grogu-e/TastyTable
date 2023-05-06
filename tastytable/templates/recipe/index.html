@@ -1,0 +1,133 @@
+ <head>
+ <title>Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="{{ url_for('static' , filename = "css/bootstrap.min.css") }}">
+  
+  <style>
+    body {
+      padding-top: 70px;
+    }
+    .navbar {
+      background-color: #2c3e50;
+    }
+    .header {
+      background-color: #f7f7f7;
+      padding: 50px 0;
+      text-align: center;
+    }
+    .header h1 {
+      color: #333333;
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    .header p {
+      color: #666666;
+      font-size: 24px;
+    }
+    .services {
+      background-color: #eeeeee;
+      padding: 50px 0;
+    }
+    .services h2 {
+      color: #333333;
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .services p {
+      color: #666666;
+      font-size: 18px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .services .row {
+      margin-top: 30px;
+    }
+    .services .col-md-4 {
+      text-align: center;
+    }
+    .services img {
+      height: 200px;
+      margin-bottom: 20px;
+      width: 200px;
+    }
+    .services h3 {
+      color: #333333;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .services .description {
+      color: #666666;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .footer {
+      background-color: #2c3e50;
+      color: #ffffff;
+      padding: 50px 0;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 18px;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+ 
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="#">Our Team</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/home">Home</a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="/blog">Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/recipe">Recipes</a>
+          </li>
+          <!--<li class="nav-item">
+            <a class="nav-link" href="templates/contact.html">Contact</a>
+          </li>-->
+		  
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+
+{% block header %}
+  <h1>{% block title %}Recipes{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('recipe.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for recipe in recipes %}
+    <article class="recipe">
+      <header>
+        <div>
+          <h1>{{ recipe['title'] }}</h1>
+          <div class="about">by {{ recipe['username'] }} on {{ recipe['created'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        {% if g.user['id'] == recipe['author_id'] %}
+          <a class="action" href="{{ url_for('recipe.update', id=post['id']) }}">Edit</a>
+        {% endif %}
+      </header>
+      <p class="body">{{ recipe['body'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

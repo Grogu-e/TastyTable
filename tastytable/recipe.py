@@ -9,14 +9,14 @@ from werkzeug.exceptions import abort
 from tastytable.auth import login_required
 from tastytable.db import get_db
 
-bp = Blueprint('recipe', __name__)
+bp = Blueprint('recipe', __name__,url_prefix='/recipe')
 
 # 2. Define the index view function.
 @bp.route('/')
 def index():
     db = get_db()
     recipes = db.execute(
-        'SELECT r.id, title, description, instructions, created, author_id, username'
+        'SELECT r.id, title, body, created, author_id, username'
         ' FROM recipe r JOIN user u ON r.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
