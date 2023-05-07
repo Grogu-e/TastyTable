@@ -82,3 +82,6 @@ CREATE USER c##username
 IDENTIFIED BY password
 
 GRANT SEESION c##username
+
+
+--
