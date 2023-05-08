@@ -39,47 +39,23 @@
   </style>
 </head>
 <body>
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-custom">
     <div class="container">
-      <a class="navbar-brand" href="#">Our Team</a>
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="path/to/your/logo.png" alt="Logo">
+        Your Brand
+      </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home</a>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('home')}}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="blog">Blog</a>
+            <a class="nav-link" href="#">Contact</a>
           </li>
-		  <li class="nav-item">
-
-				<a class="nav-link" href="recipe">Recipes </a>
-
-		</li>
-          <li class="nav-item">
-            <a class="nav-link" href="contact">Contact</a>
-          </li>
-	{% if g.user %}
-		  
-<!-- todo: move this -->
-	<li class="nav-item">
-            <a class="nav-link" href="auth/login">Login</a>
-          </li>
-	<li class="nav-item">
-            <a class="nav-link" href="auth/register">Register</a>
-          </li>
-		  <li class="na-item"><a class="nav-link" href="#">Welcome, {{g.user['username'] }}
-		  </a></li>
-		  <li class="na-item"><a class="nav-link" href="auth/logout">Log Out</a></li>
-	{% else %}
-		<li class="nav-item">
-            <a class="nav-link" href="auth/login">Login</a>
-          </li>
-	<li class="nav-item">
-            <a class="nav-link" href="auth/register">Register</a>
-	{% endif %}
         </ul>
       </div>
     </div>
