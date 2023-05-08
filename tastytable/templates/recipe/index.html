@@ -125,6 +125,7 @@
         {% endif %}
       </header>
       <p class="body">{{ recipe['body'] }}</p>
+	  <a class="action" href="/recipe/view/{{recipe['id']}}">View full recipe</a>
     </article>
     {% if not loop.last %}
       <hr>

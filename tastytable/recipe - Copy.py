@@ -9,29 +9,19 @@ from werkzeug.exceptions import abort
 from tastytable.auth import login_required
 from tastytable.db import get_db
 
-# like blog, we don't host this BP at '/' but at '/recipe'
-
 bp = Blueprint('recipe', __name__,url_prefix='/recipe')
 
 # 2. Define the index view function.
 @bp.route('/')
 def index():
     db = get_db()
-    """recipes = db.execute(
-        'SELECT r.id, title, description, instructions, created, author_id, username'
-        ' FROM recipe r JOIN user u ON r.author_id = u.id'
-        ' ORDER BY created DESC'
-    ).fetchall()
-    """
-    # use the actual current db code
     recipes = db.execute(
         'SELECT r.id, title, body, created, author_id, username'
         ' FROM recipe r JOIN user u ON r.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-
-    
     return render_template('recipe/index.html', recipes=recipes)
+    
     
 # define the "view individual recipe" function
 
@@ -68,9 +58,8 @@ def view_recipe(id):
 def create():
     if request.method == 'POST':
         title = request.form['title']
-        description = request.form['body']
-        ingredients = request.form['ingredients']
-        steps = request.form['steps']
+        description = request.form['description']
+        instructions = request.form['instructions']
         error = None
 
         if not title:
@@ -81,24 +70,11 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO recipe (title, body, author_id)'
-                ' VALUES (?, ?, ?)',
-                (title, description, g.user['id'])
+                'INSERT INTO recipe (title, description, instructions, author_id)'
+                ' VALUES (?, ?, ?, ?)',
+                (title, description, instructions, g.user['id'])
             )
             db.commit()
-            # get the id of the newly added recipe
-            recipe = db.execute(
-            """SELECT r.id
-            FROM recipe r 
-            WHERE r.title = ?
-            """,
-            (title)
-            ).fetchone()
-            print("Inserted this recipe:", recipe['id'], recipe['title'], recipe['body'])
-            # next, split up the ingredients and insert them
-            # for now, just insert as one ingredient
-            
-            # next, split up the steps and insert them
             return redirect(url_for('recipe.index'))
 
     return render_template('recipe/create.html')
@@ -112,7 +88,7 @@ def update(id):
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        instructions = request.form['steps']
+        instructions = request.form['instructions']
         error = None
 
         if not title:
@@ -151,11 +127,11 @@ def get_recipe(id, check_author=True):
         (id,)
     ).fetchone()
 
-    ##if recipe is None:
-        #abort(404, f"Recipe id {id} doesn't exist.")
+    if recipe is None:
+        abort(404, f"Recipe id {id} doesn't exist.")
 
-   # if check_author and recipe['author_id'] != g.user['id']:
-        #abort(403)
+    if check_author and recipe['author_id'] != g.user['id']:
+        abort(403)
 
     return recipe
 
@@ -175,29 +151,3 @@ def search():
         return render_template('recipe/search.html', recipes=recipes, search_query=search_query)
 
     return render_template('recipe/search.html')
-
-
-"""
-chatgpt4's take on adding a single page view for recipe
-consulted it to come up with recipes, and help structure 
-
-@app.route('/recipe/<int:recipe_id>')
-
-def recipe(recipe_id):
-
-  # Retrieve the recipe from the database using recipe_id
-
-  recipe = db.get_recipe_by_id(recipe_id)
-
-
-  # Split the ingredients and steps strings into lists
-
-  recipe['ingredients'] = recipe['ingredients'].split('\n')
-
-  recipe['steps'] = recipe['steps'].split('\n')
-
-
-  return render_template('recipe.html', recipe=recipe)
-  
-"""
-

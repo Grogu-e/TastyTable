@@ -8,8 +8,19 @@
   <link rel="stylesheet" href="{{ url_for('static' , filename = "css/bootstrap.min.css") }}">
 
   <style>
+	
+	
+    .company-banner {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 40px;
+      font-size: 60px;
+      font-weight: bold;
+      color: #000; 
+
+    }
     .team-member {
-      padding: 20px;
+      padding: 30px;
     }
     .team-member img {
       border-radius: 50%;
@@ -47,6 +58,11 @@
           <li class="nav-item">
             <a class="nav-link" href="blog">Blog</a>
           </li>
+		  <li class="nav-item">
+
+				<a class="nav-link" href="recipe">Recipes </a>
+
+		</li>
           <li class="nav-item">
             <a class="nav-link" href="contact">Contact</a>
           </li>
@@ -75,6 +91,9 @@
   </nav>
 
   <div class="container">
+  <div class="company-banner">
+      Tasty Table
+    </div>
     <div class="row">
       <div class="col-md-4">
         <div class="team-member">
