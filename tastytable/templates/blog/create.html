@@ -1,4 +1,213 @@
-{% extends 'base.html' %}
+<head>
+ <title>Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="{{ url_for('static' , filename = "css/bootstrap.min.css") }}">
+  
+  <style>
+    
+body {
+  background-color: #f8f8f8;
+}
+
+/* Style the navbar */
+.navbar {
+  background-color: #2c3e50;
+}
+
+.navbar-brand {
+  font-size: 28px;
+}
+
+.navbar-nav .nav-link {
+  font-size: 18px;
+}
+
+/* Add some padding to the top of the page to account for the navbar */
+body {
+  padding-top: 80px;
+}
+
+/* Style the header section */
+.header {
+  background-color: #f7f7f7;
+  padding: 50px 0;
+  text-align: center;
+}
+
+.header h1 {
+  color: #333333;
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.header p {
+  color: #666666;
+  font-size: 24px;
+  margin-bottom: 0;
+}
+
+/* Style the services section */
+.services {
+  background-color: #ffffff;
+  padding: 50px 0;
+}
+
+.services h2 {
+  color: #333333;
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.services p {
+  color: #666666;
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.services .row {
+  margin-top: 30px;
+}
+
+.services .col-md-4 {
+  text-align: center;
+}
+
+.services img {
+  height: 200px;
+  margin-bottom: 20px;
+  width: 200px;
+}
+
+.services h3 {
+  color: #333333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.services .description {
+  color: #666666;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Style the footer section */
+.footer {
+  background-color: #2c3e50;
+  color: #ffffff;
+  padding: 50px 0;
+  text-align: center;
+}
+
+.footer p {
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+/* Style the recipe section */
+.recipe {
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  padding: 30px;
+}
+
+.recipe h1 {
+  color: #333333;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.recipe .about {
+  color: #666666;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.recipe .body {
+  color: #666666;
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.recipe p {
+  margin-bottom: 10px;
+}
+
+.recipe ul {
+  list-style: disc;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.recipe ul li {
+  margin-bottom: 10px;
+}
+
+.recipe ol {
+  list-style: decimal;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.recipe ol li {
+  margin-bottom: 10px;
+}
+
+  </style>
+</head>
+<body>
+ 
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="#">Our Team</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/blog">Blog</a>
+          </li>
+		  <li class="nav-item">
+
+				<a class="nav-link" href="/recipe">Recipes </a>
+
+		</li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Contact</a>
+          </li>
+	{% if g.user %}
+		  
+<!-- todo: move this -->
+	<li class="nav-item">
+            <a class="nav-link" href="/auth/login">Login</a>
+          </li>
+	<li class="nav-item">
+            <a class="nav-link" href="/auth/register">Register</a>
+          </li>
+		  <li class="na-item"><a class="nav-link" href="#">Welcome, {{g.user['username'] }}
+		  </a></li>
+		  <li class="na-item"><a class="nav-link" href="auth/logout">Log Out</a></li>
+	{% else %}
+		<li class="nav-item">
+            <a class="nav-link" href="/auth/login">Login</a>
+          </li>
+	<li class="nav-item">
+            <a class="nav-link" href="auth/register">Register</a>
+	{% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
 
 {% block header %}
   <h1>{% block title %}New Post{% endblock %}</h1>
