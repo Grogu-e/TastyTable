@@ -1,8 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, redirect, url_for 
-#from .import db
-#from .import auth
+from flask import Flask, render_template, redirect, url_for
 
 
 def create_app(test_config=None):
@@ -42,62 +40,8 @@ def create_app(test_config=None):
         # for now, just view home page
         return render_template('home.html')
 
-    # nove to auth.py @app.route('/login', methods=['GET', 'POST'])
-    def login():
-        # note: with the change to home being the first page visited,
-        # the login form needs to direct to home, or maybe home_loggedin, idk
-        if request.method == 'POST':
-            username = request.form['username']
-            password = request.form['password']
-            if check_user(username, password):
-                return redirect(url_for('secret'))
-            else:
-                return 'Invalid username/password combination'
-        return render_template('login.html')
-
-    @app.route('/secret')
-    def secret():
-        return 'You have logged in successfully!'
-
-    def add_user(username, password):
-        with open('users.pkl', 'ab') as f:
-            pickle.dump({username: password}, f)
-
-    def check_user(username, password):
-        with open('users.pkl', 'rb') as f:
-            while True:
-                try:
-                    user = pickle.load(f)
-                    if username in user and user[username] == password:
-                        return True
-                except EOFError:
-                    break
-        return False
-
-    #move to auth.py @app.route('/register', methods=['GET', 'POST'])
-    def register():
-        if request.method == 'POST':
-            username = request.form['username']
-            password = request.form['password']
-            if check_user(username, password):
-                return 'User already exists'
-            add_user(username, password)
-            return redirect(url_for('login'))
-        return render_template('register.html')
-    @app.route('/home')
-    
-    
-    
-    #@app.route("/blog")
-    #def blog():
-    #adding it so the blog works
-    #return render_template("blog.html")-->
-
-   
-
-    @app.route('/contact')        
+    @app.route('/contact')
     def contact():
-        #adding this for contact page to work
         return render_template('contact.html')
         
     
@@ -115,6 +59,5 @@ def create_app(test_config=None):
     
     from . import recipe
     app.register_blueprint(recipe.bp)
-    app.add_url_rule('/', endpoint='index')
 
     return app

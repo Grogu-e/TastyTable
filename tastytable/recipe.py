@@ -1,4 +1,4 @@
-# flaskr/recipe.py
+# tastytable/recipe.py
 
 # 1. Import necessary modules and create a blueprint.
 from flask import (
@@ -38,28 +38,21 @@ def index():
 @bp.route('/view/<int:id>')
 def view_recipe(id):
     db = get_db()
-    recipe = get_recipe(id)
+    recipe = get_recipe(id, check_author=False)
     ingredients = db.execute(
-    """
-    SELECT ri.recipe_id_fk, name, quantity, measure_type
-    FROM recipe_ingredients ri JOIN recipe r on ri.recipe_id_fk = r.id
-    """).fetchall()
-    
-    #ingredients = ['1 cup water', '1 ea match']
-    print("ingredients count:", len(ingredients))
-    for ingredient in ingredients:
-        #print(ingredient)
-        #print(ingredient['ingredient'])
-        print(ingredient['quantity'],ingredient['measure_type'], ingredient['name'])
-    #steps=["step 1", "step 2"]
+        'SELECT ri.recipe_id_fk, name, quantity, measure_type'
+        ' FROM recipe_ingredients ri JOIN recipe r ON ri.recipe_id_fk = r.id'
+        ' WHERE r.id = ?',
+        (id,)
+    ).fetchall()
+
     steps = db.execute(
         'SELECT s.recipe_id_fk, step_num, description'
         ' FROM steps s JOIN recipe r ON s.recipe_id_fk = r.id'
-        ' ORDER BY step_num ASC'
+        ' WHERE r.id = ?'
+        ' ORDER BY step_num ASC',
+        (id,)
     ).fetchall()
-    print("steps:")
-    for step in steps:
-        print(step['description'])
     return render_template('recipe/recipe.html', recipe=recipe, ingredients=ingredients, steps=steps)
 
 # 3. Define the create view function.
@@ -69,8 +62,6 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['body']
-        ingredients = request.form['ingredients']
-        steps = request.form['steps']
         error = None
 
         if not title:
@@ -80,26 +71,14 @@ def create():
             flash(error)
         else:
             db = get_db()
-            db.execute(
+            cur = db.execute(
                 'INSERT INTO recipe (title, body, author_id)'
                 ' VALUES (?, ?, ?)',
                 (title, description, g.user['id'])
             )
             db.commit()
-            # get the id of the newly added recipe
-            recipe = db.execute(
-            """SELECT r.id
-            FROM recipe r 
-            WHERE r.title = ?
-            """,
-            (title)
-            ).fetchone()
-            print("Inserted this recipe:", recipe['id'], recipe['title'], recipe['body'])
-            # next, split up the ingredients and insert them
-            # for now, just insert as one ingredient
-            
-            # next, split up the steps and insert them
-            return redirect(url_for('recipe.index'))
+            # TODO: insert ingredients and steps for the new recipe (cur.lastrowid)
+            return redirect(url_for('recipe.view_recipe', id=cur.lastrowid))
 
     return render_template('recipe/create.html')
 
@@ -111,8 +90,7 @@ def update(id):
 
     if request.method == 'POST':
         title = request.form['title']
-        description = request.form['description']
-        instructions = request.form['steps']
+        body = request.form['body']
         error = None
 
         if not title:
@@ -123,9 +101,9 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE recipe SET title = ?, description = ?, instructions = ?'
+                'UPDATE recipe SET title = ?, body = ?'
                 ' WHERE id = ?',
-                (title, description, instructions, id)
+                (title, body, id)
             )
             db.commit()
             return redirect(url_for('recipe.index'))
@@ -138,6 +116,8 @@ def update(id):
 def delete(id):
     get_recipe(id)
     db = get_db()
+    db.execute('DELETE FROM recipe_ingredients WHERE recipe_id_fk = ?', (id,))
+    db.execute('DELETE FROM steps WHERE recipe_id_fk = ?', (id,))
     db.execute('DELETE FROM recipe WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('recipe.index'))
@@ -151,53 +131,23 @@ def get_recipe(id, check_author=True):
         (id,)
     ).fetchone()
 
-    ##if recipe is None:
-        #abort(404, f"Recipe id {id} doesn't exist.")
+    if recipe is None:
+        abort(404, f"Recipe id {id} doesn't exist.")
 
-   # if check_author and recipe['author_id'] != g.user['id']:
-        #abort(403)
+    if check_author and recipe['author_id'] != g.user['id']:
+        abort(403)
 
     return recipe
 
 # 7. Define the search view function.
-@bp.route('/search', methods=('GET', 'POST'))
+@bp.route('/search')
 def search():
-    if request.method == 'POST':
-        search_query = request.form['search_query']
-        db = get_db()
-        recipes = db.execute(
-            "SELECT r.id, title, description, instructions, created, author_id, username"
-            " FROM recipe r JOIN user u ON r.author_id = u.id"
-            " WHERE title LIKE ?"
-            " ORDER BY created DESC",
-            (f"%{search_query}%",)
-        ).fetchall()
-        return render_template('recipe/search.html', recipes=recipes, search_query=search_query)
-
-    return render_template('recipe/search.html')
-
-
-"""
-chatgpt4's take on adding a single page view for recipe
-consulted it to come up with recipes, and help structure 
-
-@app.route('/recipe/<int:recipe_id>')
-
-def recipe(recipe_id):
-
-  # Retrieve the recipe from the database using recipe_id
-
-  recipe = db.get_recipe_by_id(recipe_id)
-
-
-  # Split the ingredients and steps strings into lists
-
-  recipe['ingredients'] = recipe['ingredients'].split('\n')
-
-  recipe['steps'] = recipe['steps'].split('\n')
-
-
-  return render_template('recipe.html', recipe=recipe)
-  
-"""
-
+    search_query = request.args.get('q', '')
+    recipes = get_db().execute(
+        'SELECT r.id, title, body, created, author_id, username'
+        ' FROM recipe r JOIN user u ON r.author_id = u.id'
+        ' WHERE title LIKE ?'
+        ' ORDER BY created DESC',
+        (f"%{search_query}%",)
+    ).fetchall()
+    return render_template('recipe/index.html', recipes=recipes)

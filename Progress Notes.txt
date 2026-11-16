@@ -6,8 +6,6 @@ Tasks:
 Create user name Demo.
 
 Recipe for Demo user
-username: demo
-password: demo@1234
 
 
 SQL_recipe for Water :

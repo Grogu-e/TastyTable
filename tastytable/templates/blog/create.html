@@ -186,22 +186,16 @@ body {
           </li>
 	{% if g.user %}
 		  
-<!-- todo: move this -->
-	<li class="nav-item">
-            <a class="nav-link" href="/auth/login">Login</a>
-          </li>
-	<li class="nav-item">
-            <a class="nav-link" href="/auth/register">Register</a>
-          </li>
-		  <li class="na-item"><a class="nav-link" href="#">Welcome, {{g.user['username'] }}
+
+		  <li class="nav-item"><a class="nav-link" href="#">Welcome, {{g.user['username'] }}
 		  </a></li>
-		  <li class="na-item"><a class="nav-link" href="auth/logout">Log Out</a></li>
+		  <li class="nav-item"><a class="nav-link" href="/auth/logout">Log Out</a></li>
 	{% else %}
 		<li class="nav-item">
             <a class="nav-link" href="/auth/login">Login</a>
           </li>
 	<li class="nav-item">
-            <a class="nav-link" href="auth/register">Register</a>
+            <a class="nav-link" href="/auth/register">Register</a>
 	{% endif %}
         </ul>
       </div>
